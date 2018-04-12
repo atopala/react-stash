@@ -17,7 +17,9 @@
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build"
   },
-  "dependencies": {},
+  "dependencies": {
+    "rxjs": "^5.5.7"
+  },
   "peerDependencies": {
     "prop-types": "^15.5.4",
     "react": "^15.0.0 || ^16.0.0",
@@ -30,7 +32,11 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "check-prop-types": "^1.1.2",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "gh-pages": "^1.1.0",
+    "import": "^0.0.6",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-scripts": "^1.1.1",
