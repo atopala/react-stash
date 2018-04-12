@@ -51,7 +51,7 @@ class Stash extends Component {
         let { children } = this.props
         let { ids } = this.state
         const state = (this.subscribes || ids || []).map(id => Stash.get(id))
-        console.log('Stash.render()', this.subscribes, state)
+        //console.log('Stash.render()', this.subscribes, state)
 
         if (typeof children === 'function') {
             //return Children.only(children())
