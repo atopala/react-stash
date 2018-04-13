@@ -5,6 +5,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Provider from './provider'
+import { stat } from 'fs';
 
 const provider = new Provider()
 
@@ -20,15 +21,21 @@ class Stash extends Component {
         this.state = {}
         this.onChangeState = this.onStateChanged.bind(this)
         const { subscribe } = this.props
-        if (Array.isArray(subscribe)) {
+
+        if (typeof subscribe === 'function') {
+            // subscription defined by function
+            this.checkSubscription = (ids = new Set()) => subscribe(ids)
+        } else if (Array.isArray(subscribe)) {
             this.subscribes = subscribe.reduce((acc, item) => {
                 acc = [...acc, ...(splitIntoWords(item))]
                 return acc
             }, []) || []
+            this.checkSubscription = (keys = new Set()) => this.subscribes.some(sub => keys.has(sub))
         } else if (typeof subscribe === 'string') {
             this.subscribes = splitIntoWords(subscribe || '') || []
+            this.checkSubscription = (keys = new Set()) => this.subscribes.some(sub => keys.has(sub))
         } else {
-            this.subscribes = []
+            this.checkSubscription = (keys = new Set()) => true
         }
     }
 
@@ -41,21 +48,32 @@ class Stash extends Component {
         this.subscription.unsubscribe()
     }
 
-    onStateChanged(ids = new Set()) {
-        if (this.subscribes.some(sub => ids.has(sub))) {
-            this.setState({ changeTime: new Date(), ids: Array.from(ids.values()) })
+    onStateChanged(changeMap = new Map()) {
+        const keys = new Set(changeMap.keys())
+        if (this.checkSubscription(keys)) {
+            this.setState({
+                timestamp: new Date(),
+                changeMap
+            })
         }
     }
 
     render() {
         let { children } = this.props
-        let { ids } = this.state
-        const state = (this.subscribes || ids || []).map(id => Stash.get(id))
+        let { changeMap } = this.state
+        const state = this.subscribes ?
+            this.subscribes.map(id => Stash.get(id)) :
+            changeMap
+
         //console.log('Stash.render()', this.subscribes, state)
+        // ids.reduce((acc, id) => ({
+        //     ...acc,
+        //     [id]: Stash.get(id)
+        // }), {})
 
         if (typeof children === 'function') {
             //return Children.only(children())
-            let content = children(...state)
+            let content = Array.isArray(state) ? children(...state) : children(state)
             if (!content) {
                 return null
                 //throw new Error(`No children content for subscription: ${subscribe}. Children: ${children}`)

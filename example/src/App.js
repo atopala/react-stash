@@ -26,14 +26,15 @@ export default class App extends Component {
         <div>
           <Stash>
             {
-              (action, ...state) => {
-                console.log(action, state)
+              (state = new Map()) => {
+                // Implementing action logging
+                console.log(state.get('@'), state)
                 return null
               }
             }
           </Stash>
           {/* Listen to 'Alice' and/or 'Bob' changes: subscribe="Alice, Bob" or subscribe={['Alice', 'Bob']} */}
-          <Stash subscribe={['Alice', 'Bob']}> 
+          <Stash subscribe={['Alice', 'Bob']}>
             {
               (alice, bob) =>
                 <React.Fragment>

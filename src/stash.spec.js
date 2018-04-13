@@ -4,7 +4,7 @@ import { mount } from "enzyme"
 import checkPropTypes from 'check-prop-types'
 import { wrap } from 'module';
 
-describe('Stash', () => {
+describe('Stash Tests', () => {
   it('is truthy', () => {
     expect(Stash).toBeTruthy()
   })

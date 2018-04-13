@@ -59,7 +59,9 @@ export default class StateProvider {
 
     __set = (value) => {
         const keys = Object.keys(value)
+        const changeSet = new Map()
         keys.forEach(key => {
+            changeSet.set(key, value[key])
             if (typeof value[key] === 'object') {
                 this.__state.set(key, {
                     ...this.get(key),
@@ -70,8 +72,8 @@ export default class StateProvider {
             }
         })
 
-        this.__subject.next(new Set(keys))
-        return value
+        this.__subject.next(changeSet)
+        return changeSet
     }
 
     /**
@@ -79,7 +81,7 @@ export default class StateProvider {
      */
     delete = (id) => {
         const res = this.__state.delete(id)
-        this.__subject.next(new Set([id]))
+        this.__subject.next(new Map([[id, undefined]]))
         return res
     }
 

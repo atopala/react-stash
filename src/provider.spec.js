@@ -8,18 +8,25 @@ describe('Provider Tests', () => {
 
     it('set, get, delete state objects', () => {
         const provider = new Provider()
-        const bob = {
+
+        expect(provider.set({
+            "Bob": {
+                name: "Bob",
+                planet: "Earth",
+                year: 2018
+            }
+        })).toEqual(new Map([
+            ['Bob', {
+                name: "Bob",
+                planet: "Earth",
+                year: 2018
+            }]
+        ]))
+        expect(provider.get('Bob')).toEqual({
             name: "Bob",
             planet: "Earth",
             year: 2018
-        }
-
-        const state = {
-            "Bob": bob
-        }
-
-        expect(provider.set(state)).toEqual(state)
-        expect(provider.get('Bob')).toEqual(bob)
+        })
         expect(provider.delete('Bob')).toEqual(true)
         expect(provider.get('Bob')).toBeUndefined()
     })
@@ -38,13 +45,13 @@ describe('Provider Tests', () => {
             return {
                 'Bob': bob
             }
-        })).toEqual({
-            'Bob': {
+        })).toEqual(new Map([
+            ['Bob', {
                 name: "Bob",
                 planet: "Earth",
                 year: 2018
-            }
-        })
+            }]
+        ]))
         expect(provider.get('Bob')).toEqual(bob)
 
         expect(provider.set('Bob', (_bob) => {
@@ -64,22 +71,22 @@ describe('Provider Tests', () => {
                     friends: [_bob]
                 }
             }
-        })).toEqual({
-            'Bob': {
+        })).toEqual(new Map([
+            ['Bob', {
                 name: "Bob",
                 planet: "Earth",
                 year: 2018,
                 city: 'Munich'
-            },
-            'Alice': {
+            }],
+            ['Alice', {
                 name: 'Alice',
                 friends: [{
                     name: "Bob",
                     planet: "Earth",
                     year: 2018
                 }]
-            }
-        })
+            }]
+        ]))
 
         expect(provider.get('Alice')).toEqual({
             name: 'Alice',
@@ -118,8 +125,22 @@ describe('Provider Tests', () => {
             }
         }))
         expect(onChange).toHaveBeenCalledTimes(2)
-        expect(onChange.mock.calls[0][0]).toEqual(new Set(['Bob']))
-        expect(onChange.mock.calls[1][0]).toEqual(new Set(['Alice', 'Bob']))
+        expect(onChange.mock.calls[0][0]).toEqual(new Map([
+            ['Bob', {
+                name: 'Bob',
+                plane: 'Earth'
+            }]
+        ]))
+        expect(onChange.mock.calls[1][0]).toEqual(new Map([
+            ['Alice', {
+                name: 'Alice',
+                friends: [{
+                    name: 'Bob',
+                    plane: 'Earth'
+                }]
+            }],
+            ['Bob', {}]
+        ]))
 
         // unsubscribe
         subscription.unsubscribe()
@@ -129,16 +150,16 @@ describe('Provider Tests', () => {
                 name: 'Name'
             }
         })
-        expect(onChange).toHaveBeenCalledTimes(2)  
+        expect(onChange).toHaveBeenCalledTimes(2)
     })
 
     it('set, get string value', () => {
         const provider = new Provider()
         expect(provider.set({
             'name': 'Alice'
-        })).toEqual({
-            'name': 'Alice'
-        })
+        })).toEqual(new Map([
+            ['name', 'Alice']
+        ]))
 
         expect(provider.get('name')).toEqual('Alice')
     })
