@@ -1,4 +1,5 @@
 import Provider from './provider'
+import { ExpandOperator } from 'rxjs/operators/expand';
 
 describe('Provider Tests', () => {
     it('undefined by default', () => {
@@ -162,5 +163,32 @@ describe('Provider Tests', () => {
         ]))
 
         expect(provider.get('name')).toEqual('Alice')
+    })
+
+    it('set, get array', () => {
+        const provider = new Provider()
+        expect(provider.set({
+            'users': [
+                { name: 'Alice' },
+                { name: 'Bob' }
+            ]
+        })).toEqual(new Map([
+            ['users', [
+                { name: 'Alice' },
+                { name: 'Bob' }                
+            ]]
+        ]))
+
+        expect(provider.__state).toEqual(new Map([
+            ['users', [
+                { name: 'Alice' },
+                { name: 'Bob' }                
+            ]]
+        ]))
+
+        expect(provider.get('users')).toEqual([
+            { name: 'Alice' },
+            { name: 'Bob' }
+        ])
     })
 })

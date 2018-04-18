@@ -62,7 +62,10 @@ export default class StateProvider {
         const changeSet = new Map()
         keys.forEach(key => {
             changeSet.set(key, value[key])
-            if (typeof value[key] === 'object') {
+            if (Array.isArray(value[key])) {
+                this.__state.set(key, value[key])
+            }
+            else if (typeof value[key] === 'object') {
                 this.__state.set(key, {
                     ...this.get(key),
                     ...value[key]
