@@ -1,26 +1,17 @@
-# react-stash
-
-> Non-ceremonial external state manager for React
-
-[![NPM](https://img.shields.io/npm/v/react-stash.svg)](https://www.npmjs.com/package/react-stash) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-
-## Install
-
-```bash
-npm install --save react-stash
-```
-
-## Usage
-
-```jsx
 import React, { Component } from 'react'
 import Logger from './Logger'
 import Stash from 'react-stash'
 
+const page = {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: 30
+}
+
 class Example extends Component {
     render() {
         return (
-            <div className={pageStyle}>
+            <div className={page}>
                 <h2>Who lives where?</h2>
                 <Stash subscribe="PRODUCER">
                     {
@@ -89,14 +80,4 @@ const handleProducerSubmit = (event) => {
     event.preventDefault()
 }
 
-const pageStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: 30
-}
-
-```
-
-## License
-
-MIT © [](https://github.com/)
+export default Example
